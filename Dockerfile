@@ -1,15 +1,21 @@
-# Use a Python-based image
+# Base image
 FROM python:3.9-slim
 
-# Copy requirements.txt and install dependencies
-COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Environment settings
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Specify working directory
+# Set working directory
 WORKDIR /app
 
-# Copy application code
-COPY . .
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Run the application
+# Copy only required folders
+COPY src/ ./src
+COPY model/ ./model
+COPY data/ ./data
+
+# Default command
 CMD ["python", "src/predict.py"]
